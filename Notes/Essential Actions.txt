@@ -1,0 +1,20 @@
+Essential actions of the system
+================================
+
+Auth
+- sign in
+- sign out
+
+Normal use
+- Read post
+- Read posts/paginate
+- Read comments on post
+
+- Create post
+- Create comment
+
+- Like post
+- Unlike post
+
+Moderator
+- Tag post
