@@ -1,0 +1,6 @@
+@text_forum_web_app_HostAddress = http://localhost:5276
+
+GET {{text_forum_web_app_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
