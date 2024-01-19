@@ -1,2 +1,20 @@
 TODO: Plans for the work
 =========================
+
+Initial ideas / purpose of project.
+
+	Create text web forum API / DB
+	(USER FLOWS)
+	- Users can create posts 
+	- Users can write comments on posts
+		- Investigate nested comments **
+	- Users can like comments once per post, not their own.
+	- A separate user type of moderator can tag posts for being misleading or false
+	- Users can log into the system to gain access to write posts or comments
+	- Anon can read posts
+	
+Extra notes
+	- Small scale < 100 users
+	- System auth required
+	- Integrable API needs to be provided 
+	- MVC -> rudimentary UI 
