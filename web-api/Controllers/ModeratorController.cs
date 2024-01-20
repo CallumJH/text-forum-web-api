@@ -5,11 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 [Authorize(Roles = "Moderator")]
 public class ModeratorController : Controller
 {
-    private readonly DataBaseConnection _connection;
 
-    public ModeratorController(DataBaseConnection connection)
+    public ModeratorController()
     {
-        _connection = connection;
     }
 
     [HttpPost("togglePostMisleading/{id}")]

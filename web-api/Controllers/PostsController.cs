@@ -5,11 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 [Authorize(Roles = "User")]
 public class PostsController : Controller
 {
-    private readonly DataBaseConnection _connection;
-
-    public PostsController(DataBaseConnection connection)
+    public PostsController()
     {
-        _connection = connection;
     }
 
     /// <summary>

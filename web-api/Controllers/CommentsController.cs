@@ -5,11 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 [Authorize(Roles = "User")]
 public class CommentsController : Controller
 {
-    private readonly DataBaseConnection _connection;
 
-    public CommentsController(DataBaseConnection connection)
+    public CommentsController()
     {
-        _connection = connection;
     }
 
     /// <summary>

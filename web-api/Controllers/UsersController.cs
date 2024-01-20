@@ -3,11 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 public class UsersController : Controller
 {
-    private readonly DataBaseConnection _connection;
-
-    public UsersController(DataBaseConnection connection)
+    public UsersController()
     {
-        _connection = connection;
     }
 
     [HttpPost("login")]
