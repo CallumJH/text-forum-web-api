@@ -24,10 +24,10 @@ public class PostsController : Controller
     [HttpGet("posts")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public Task<ICollection<Post>> GetPosts()
+    public Task<IActionResult> GetPosts()
     {
         //Default 200 OK
-        return Task.FromResult<ICollection<Post>>(new List<Post>());
+        return Task.FromResult<IActionResult>(Ok(new List<Post>()));
     }
 
     /// <summary>
@@ -45,10 +45,10 @@ public class PostsController : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public Task<Post> GetPost(int id)
+    public Task<IActionResult> GetPost(int id)
     {
         //Default 200 OK
-        return Task.FromResult<Post>(new Post());
+        return Task.FromResult<IActionResult>(Ok(new Post()));
     }
 
     /// <summary>

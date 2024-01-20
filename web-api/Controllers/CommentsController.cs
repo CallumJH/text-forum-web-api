@@ -19,10 +19,10 @@ public class CommentsController : Controller
     /// <returns>
     /// </returns>
     [HttpGet("comments/{postId}")]
-    public Task<ICollection<Comment>> GetComments(int postId)
+    public Task<IActionResult> GetComments(int postId)
     {
         //Default 200 OK
-        return Task.FromResult<ICollection<Comment>>(new List<Comment>());
+        return Task.FromResult<IActionResult>(Ok(new List<Comment>()));
     }
 
     /// <summary>
