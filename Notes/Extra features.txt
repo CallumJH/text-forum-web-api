@@ -1,0 +1,10 @@
+Extra features
+==================
+
+- Logging
+- Password encryption
+- Auditing
+- 2Fa
+- SSO
+- Extra auth on controllers
+
