@@ -1,6 +1,6 @@
 ﻿using LinqToDB;
 using LinqToDB.Data;
-using Pocos;
+using DataModels;
 
 namespace DataAccessLayer;
 
