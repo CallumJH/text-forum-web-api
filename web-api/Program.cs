@@ -1,24 +1,28 @@
+using DataAccessLayer;
+using LinqToDB;
+using LinqToDB.AspNet;
+using LinqToDB.AspNet.Logging;
+
 namespace text_forum_web_app;
 public class Program
-{
+{        
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        var configuration = builder.Configuration;
-        var Startup = new Startup(configuration);
-        // GenerateDatabase;
-        GenerateDatabase.InitializeDatabase();
-
-        // Add services to the container.
-        Startup.ConfigureServices(builder.Services);
 
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        var connec = builder.Configuration.GetConnectionString("Default");
+        builder.Services.AddLinqToDBContext<DataBaseConnection>((provider, options)
+            => options
+                .UseSQLite(builder.Configuration.GetConnectionString("Default"))
+                .UseDefaultLogging(provider));
+
+        builder.Services.AddTransient<GenerateDatabase>();
+
         var app = builder.Build();
-        Startup.Configure(app, builder.Environment);
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -31,16 +35,16 @@ public class Program
         app.UseAuthorization();
         app.MapControllers();
 
+        // Use dependency injection to get GenerateDatabase and run the database initialization logic
+        using (var scope = app.Services.CreateScope())
+        {
+            var serviceProvider = scope.ServiceProvider;
+            var generateDB = serviceProvider.GetRequiredService<GenerateDatabase>();
+            generateDB.CreateDataBaseTables();
+        }
+
         app.Run();
     }
-
-    // Potential clean approach to the above code
-    // public static IHostBuilder CreateHostBuilder(string[] args) =>
-    //     Host.CreateDefaultBuilder(args)
-    //         .ConfigureWebHostDefaults(webBuilder =>
-    //         {
-    //             webBuilder.UseStartup<Startup>();
-    //         });
 }
 
 
