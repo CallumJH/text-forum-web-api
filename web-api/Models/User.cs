@@ -12,6 +12,7 @@ public class User
     [Required]
     [RegularExpression(@"^[a-zA-Z0-9_-]{3,20}$")]
     public string Username { get; set; }
+    
     /// <summary>
     /// Password must be 8-20 characters long and contain at least one uppercase letter, one lowercase letter, one number and one special character.
     /// </summary>
