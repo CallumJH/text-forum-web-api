@@ -15,5 +15,9 @@ public class DataBaseConnection : DataConnection
     public DataBaseConnection(DataOptions<DataBaseConnection> options) : base(options.Options)
     { 
     }
-    //public ITable<Person> People => this.GetTable<Person>();
+
+    public ITable<UserModel> Users => this.GetTable<UserModel>();
+    public ITable<CommentModel> Comments => this.GetTable<CommentModel>();
+    public ITable<PostModel> Posts => this.GetTable<PostModel>();
+    public ITable<LikeModel> Likes => this.GetTable<LikeModel>();
 }
