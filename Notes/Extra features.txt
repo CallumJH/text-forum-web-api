@@ -1,0 +1,13 @@
+Extra features
+==================
+
+- Logging
+- Password encryption
+- Auditing
+- 2Fa
+- SSO
+- Extra auth on controllers
+- DB auth config
+- Postman collection
+- Testing features
+- UI for use 
