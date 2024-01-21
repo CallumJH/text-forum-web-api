@@ -2,6 +2,7 @@ using DataAccessLayer;
 using Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
+[Route("api/[controller]")]
 public class UsersController : Controller
 {
     IUserService userService;
@@ -18,7 +19,7 @@ public class UsersController : Controller
         try
         {
             var request = userService.Login(user);
-            if (request.Result)
+            if (request.Result.Success)
             {
                 return Task.FromResult<IActionResult>(Ok());
             }
@@ -39,10 +40,11 @@ public class UsersController : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> SignUpUser([FromBody] User user)
     {
+        //TODO: Include specific error messages when per se username already exists
         try
         {
             var request = userService.SignUp(user);
-            if (request.Result)
+            if (request.Result.Success)
             {
                 return Task.FromResult<IActionResult>(Ok());
             }

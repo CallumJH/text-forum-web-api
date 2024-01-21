@@ -1,12 +1,15 @@
 using DataAccessLayer;
+using Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = "User")]
+[Authorize(Roles = "User"), Route("api/[controller]")]
 public class PostsController : Controller
 {
-    public PostsController()
+    IPostService postService;
+    public PostsController(IPostService postService)
     {
+        this.postService = postService;
     }
 
     /// <summary>
@@ -21,10 +24,19 @@ public class PostsController : Controller
     [HttpGet("posts")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetPosts()
     {
-        //Default 200 OK
-        return Task.FromResult<IActionResult>(Ok(new List<Post>()));
+        try
+        {
+            var posts = postService.GetPosts();
+            return Task.FromResult<IActionResult>(Ok(posts));
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e);
+            return Task.FromResult<IActionResult>(BadRequest());
+        }
     }
 
     /// <summary>
@@ -44,8 +56,16 @@ public class PostsController : Controller
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetPost(int id)
     {
-        //Default 200 OK
-        return Task.FromResult<IActionResult>(Ok(new Post()));
+        try
+        {
+            var post = postService.GetPost(id);
+            return Task.FromResult<IActionResult>(Ok(post));
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e);
+            return Task.FromResult<IActionResult>(NotFound());
+        }
     }
 
     /// <summary>
@@ -67,8 +87,20 @@ public class PostsController : Controller
     [ProducesResponseType(StatusCodes.Status511NetworkAuthenticationRequired)]
     public Task<IActionResult> CreatePost([FromBody] Post post)
     {
-        //Default 200 OK
-        return Task.FromResult<IActionResult>(Ok());
+        try
+        {
+            var result = postService.CreatePost(post);
+            if(result == null)
+            {
+                return Task.FromResult<IActionResult>(BadRequest());
+            }
+            return Task.FromResult<IActionResult>(Ok());
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e);
+            return Task.FromResult<IActionResult>(BadRequest());
+        }
     }
 
     /// <summary>

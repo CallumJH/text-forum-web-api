@@ -2,7 +2,7 @@ using DataAccessLayer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = "User")]
+[Authorize(Roles = "User"), Route("api/[controller]")]
 public class CommentsController : Controller
 {
 
