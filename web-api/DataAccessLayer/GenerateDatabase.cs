@@ -14,19 +14,20 @@ public class GenerateDatabase
         try
         {
             //Check if table exists in db
-            if(!db.DataProvider.GetSchemaProvider().GetSchema(db).Tables.Any(x => x.TableName == "Users"))
+            var tables = db.DataProvider.GetSchemaProvider().GetSchema(db).Tables;
+            if (!tables.Any(x => x.TableName == "Users"))
             {
                 db.CreateTable<UserModel>();
             }
-            if(!db.DataProvider.GetSchemaProvider().GetSchema(db).Tables.Any(x => x.TableName == "Posts"))
+            if(!tables.Any(x => x.TableName == "Posts"))
             {
                 db.CreateTable<PostModel>();
             }
-            if(!db.DataProvider.GetSchemaProvider().GetSchema(db).Tables.Any(x => x.TableName == "Comments"))
+            if(!tables.Any(x => x.TableName == "Comments"))
             {
                 db.CreateTable<CommentModel>();
             }
-            if(!db.DataProvider.GetSchemaProvider().GetSchema(db).Tables.Any(x => x.TableName == "Likes"))
+            if(!tables.Any(x => x.TableName == "Likes"))
             {
                 db.CreateTable<LikeModel>();
             }
