@@ -9,12 +9,16 @@ public class ModeratorService : IModeratorService
     {
         _connection = connection;
     }
-    public async Task TogglePostMisleading(int id)
+    public async Task<RequestWrapper> TogglePostMisleading(int id)
     {
+        var request = new RequestWrapper();
+        return request;
     }
 
-    public async Task TogglePostFalseInformation(int id)
+    public async Task<RequestWrapper> TogglePostFalseInformation(int id)
     {
+        var request = new RequestWrapper();
+        return request;
     }
 
 }

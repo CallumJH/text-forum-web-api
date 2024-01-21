@@ -10,17 +10,22 @@ public class CommentService : ICommentService
         _connection = connection;
     }
 
-    public async Task<List<Comment>> GetComments(int postId)
+    public async Task<RequestWrapper<List<Comment>>> GetComments(int postId)
     {
-        return new List<Comment>();
+        var request = new RequestWrapper<List<Comment>>();
+        return request;
     }
 
-    public async Task CreateComment(Comment comment)
+    public async Task<RequestWrapper> CreateComment(Comment comment)
     {
+        var request = new RequestWrapper();
+        return request;
     }
 
-    public async Task LikeComment(int id)
+    public async Task<RequestWrapper> LikeComment(int id)
     {
+        var request = new RequestWrapper();
+        return request;
     }
 
 }

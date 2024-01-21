@@ -10,21 +10,34 @@ public class PostService : IPostService
         _connection = connection;
     }
 
-    public async Task<List<Post>> GetPosts()
+    public async Task<RequestWrapper<List<Post>>> GetPosts()
     {
-        return new List<Post>();
+        var request = new RequestWrapper<List<Post>>();
+        return request;
     }
 
-    public async Task CreatePost(Post post)
+    public async Task<RequestWrapper<Post>> GetPost(int id)
     {
+        var request = new RequestWrapper<Post>();
+        return request;
     }
 
-    public async Task LikePost(int id)
+    public async Task<RequestWrapper> CreatePost(Post post)
     {
+        var request = new RequestWrapper();
+        return request;
     }
 
-    public async Task UnlikePost(int id)
+    public async Task<RequestWrapper> LikePost(int id)
     {
+        var request = new RequestWrapper();
+        return request;
+    }
+
+    public async Task<RequestWrapper> UnlikePost(int id)
+    {
+        var request = new RequestWrapper();
+        return request;
     }
 
 }
