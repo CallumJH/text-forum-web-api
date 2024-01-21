@@ -2,6 +2,7 @@ Extra features
 ==================
 
 - Logging
+- Model mapping (do not expose data to user)
 - Password encryption
 - Auditing
 - 2Fa
