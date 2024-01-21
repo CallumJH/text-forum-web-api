@@ -1,10 +1,11 @@
 using DataAccessLayer;
+using Interfaces;
 
-public class CommentsService
+public class CommentService : ICommentService
 {
     private readonly DataBaseConnection _connection;
 
-    public CommentsService(DataBaseConnection connection)
+    public CommentService(DataBaseConnection connection)
     {
         _connection = connection;
     }

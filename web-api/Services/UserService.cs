@@ -1,11 +1,13 @@
 using DataAccessLayer;
 using DataModels;
+using Interfaces;
 using LinqToDB;
 
-public class UsersService
+
+public class UserService : IUserService
 {
     private readonly DataBaseConnection db;
-    public UsersService(DataBaseConnection dataBaseConnection)
+    public UserService(DataBaseConnection dataBaseConnection)
     {
         db = dataBaseConnection;
     }
@@ -14,14 +16,14 @@ public class UsersService
     {
         try
         {
-            var User = db.Users.FirstOrDefault(x => x.Username == user.Username && x.Password == user.Password); // TODO: Result Hash this for comparison
+            var User = db.Users.FirstOrDefault(x => x.Username == user.Username && x.Password == user.Password); // TODO: Resolve Hash for this comparison
             if (User == null)
             {
                 return Task.FromResult(false);
             }
             return Task.FromResult(true);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Console.WriteLine(e);
             return Task.FromResult(false);
@@ -41,7 +43,7 @@ public class UsersService
             db.Insert(User);
             return Task.FromResult(true);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Console.WriteLine(e);
             return Task.FromResult(false);

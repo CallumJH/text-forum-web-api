@@ -1,4 +1,5 @@
 using DataAccessLayer;
+using Interfaces;
 using LinqToDB;
 using LinqToDB.AspNet;
 using LinqToDB.AspNet.Logging;
@@ -21,6 +22,10 @@ public class Program
                 .UseDefaultLogging(provider));
 
         builder.Services.AddTransient<GenerateDatabase>();
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<ICommentService, CommentService>();
+        builder.Services.AddScoped<IPostService, PostService>();
+        builder.Services.AddScoped<IModeratorService, ModeratorService>();
 
         var app = builder.Build();
 

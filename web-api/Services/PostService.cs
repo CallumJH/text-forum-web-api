@@ -1,10 +1,11 @@
 using DataAccessLayer;
+using Interfaces;
 
-public class PostsService
+public class PostService : IPostService
 {
     private readonly DataBaseConnection _connection;
 
-    public PostsService(DataBaseConnection connection)
+    public PostService(DataBaseConnection connection)
     {
         _connection = connection;
     }

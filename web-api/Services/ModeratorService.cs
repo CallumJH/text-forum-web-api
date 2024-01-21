@@ -1,6 +1,7 @@
 using DataAccessLayer;
+using Interfaces;
 
-public class ModeratorService
+public class ModeratorService : IModeratorService
 {
     private readonly DataBaseConnection _connection;
 
