@@ -5,10 +5,18 @@
 public class RequestWrapper {
     public bool Success { get; set; } = false;
     public string? Message { get; set; } = "Something went wrong";
+    public void SetSuccess(string? message) {
+        Success = true;
+        Message = message ?? "Success";
+    }
 }
 
 public class RequestWrapper<T> {
     public T? Data { get; set; }
     public bool Success { get; set; } = false;
     public string? Message { get; set; } = "Something went wrong";
+    public void SetSuccess(string? message) {
+        Success = true;
+        Message = message ?? "Success";
+    }
 }
