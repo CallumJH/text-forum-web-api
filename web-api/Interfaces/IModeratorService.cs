@@ -2,7 +2,5 @@
 
 public interface IModeratorService
 {
-
-    Task<RequestWrapper> TogglePostFalseInformation(int id);
-    Task<RequestWrapper> TogglePostMisleading(int id);
+    Task<RequestWrapper> ToggleContentFlag(ContentToggle request);
 }
