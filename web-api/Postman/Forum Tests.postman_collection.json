@@ -1,0 +1,270 @@
+{
+	"info": {
+		"_postman_id": "8bfa5f8f-ea37-422b-9ff5-0562073e1ca1",
+		"name": "Forum Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2428353"
+	},
+	"item": [
+		{
+			"name": "User flows",
+			"item": [
+				{
+					"name": "Sign up user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create user with no body\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\" : \"Hrumph\",\r\n    \"password\" : \"H83joi;;-\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/api/Users/Signup",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"Signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Log in user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\" : \"Hrumph\",\r\n    \"password\" : \"H83joi;;-\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/api/Users/Login",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"Login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Moderator flows",
+			"item": [
+				{
+					"name": "Toggle content flags",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Bearer token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ContentId\" : \"1\",\r\n    \"ContentType\" : {{type-post}},\r\n    \"IsFalseInformation\" : false,\r\n    \"IsMisleading\" : true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/api/Moderator/toggleContentFlag",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"api",
+								"Moderator",
+								"toggleContentFlag"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post flows",
+			"item": [
+				{
+					"name": "Get posts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/api/Posts/posts",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"api",
+								"Posts",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Bearer token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/api/Posts/posts/{{$randomInt}}}",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"api",
+								"Posts",
+								"posts",
+								"{{$randomInt}}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Bearer token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Title\" : \"{{post-title}}\",\r\n    \"Content\" : \"{{post-content}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/api/Posts/createPost",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"api",
+								"Posts",
+								"createPost"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Bearer token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/api/Posts/likePost/1",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"api",
+								"Posts",
+								"likePost",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comment flows",
+			"item": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base-url",
+			"value": "https://localhost:44331/"
+		}
+	]
+}
