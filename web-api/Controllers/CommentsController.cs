@@ -18,7 +18,10 @@ public class CommentsController : Controller
     /// <param name="postId">The ID of the post </param>
     /// <returns>
     /// </returns>
-    [HttpGet("comments/{postId}")]
+    [HttpGet("GetComments/{postId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetComments(int postId)
     {
         try
@@ -45,7 +48,12 @@ public class CommentsController : Controller
     /// </param>
     /// <returns>
     /// </returns>
-    [HttpPost("createComment")]
+    [HttpPost("CreateComment")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status511NetworkAuthenticationRequired)]
     public async Task<IActionResult> CreateComment([FromBody] Comment comment)
     {
         try
@@ -72,7 +80,7 @@ public class CommentsController : Controller
     /// </param>
     /// <returns>
     /// </returns>
-    [HttpPost("likeComment/{id}")]
+    [HttpPost("LikeComment/{id}")]
     public async Task<IActionResult> LikeComment(int id)
     {
         try

@@ -11,9 +11,17 @@ public class ModeratorController : Controller
         this.moderatorService = moderatorService;
     }
 
-    [HttpPost("toggleContentFlag")]
+    /// <summary>
+    /// This controller function is used by moderators to
+    /// flag posts and comments inappropriate or misleading.
+    /// </summary>
+    /// <param name="toggle">This object contains the post/comment id and the flag values</param>
+    /// <returns>Http response code of toggle process</returns>
+    [HttpPost("ToggleContentFlag")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> ToggleContentFlag([FromBody]ContentToggle toggle)
     {
         try
