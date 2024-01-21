@@ -101,4 +101,14 @@ public class UserService : IUserService
         return session.Token;
     }
 
+    public async Task<UserModel> GetUserByUsername(string username)
+    {
+        var user = await db.Users.FirstOrDefaultAsync(x => x.Username == username);
+        if(user is null)
+        {
+            throw new Exception("User not found");
+        }
+        return user;
+    }
+
 }
