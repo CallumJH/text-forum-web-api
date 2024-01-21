@@ -12,3 +12,4 @@ Extra features
 - Postman collection
 - Testing features
 - UI for use 
+- Soft delete?
