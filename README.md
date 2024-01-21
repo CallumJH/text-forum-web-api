@@ -12,6 +12,7 @@ Developed and designed by myself - Callum Harris
 - [Usage](#usage)
 - [Database](#database)
 - [Authentication](#authentication)
+- [ShortFalls](#shortfalls)
 - [License](#license)
 
 ## Overview
@@ -122,6 +123,26 @@ The authentication process is as follows.
 3. In swagger you can use this token in the auth segment prepended with "Bearer {token}"
 4. If in postman change the Bearer token value in the environment collection to the new provided token.
 <b>⚠Currently there is not token refresh capabilities if your token expires you will need to fire the login again.</b>  
+
+## Shortfalls
+
+This application is not complete and is lacking a couple features 
+I would have liked to add such as.
+
+- Auditing
+- Logging
+- In depth postman tests
+- Fleshed out swagger docs
+- Bug trackings
+- Improved code flow
+- Secured Auth values from configurations
+- A SQL database + adapter settings
+- Socials sign in / SSO
+- Improved pagination
+- Better configuration management
+- API protection
+- Comment / Title filters
+- A UI
 
 ## License
 ![Alt text](https://m.media-amazon.com/images/I/61GSC7FWWtL._AC_UF894,1000_QL80_.jpg "a title")
