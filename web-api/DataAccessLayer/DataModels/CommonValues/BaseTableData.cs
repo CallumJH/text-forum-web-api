@@ -2,7 +2,8 @@ using LinqToDB.Mapping;
 
 public class BaseTableData
 {
-    [Column, PrimaryKey, NotNull]
+    [Column, PrimaryKey]
+    [NotNull, Identity, SkipValuesOnInsert]
     public int Id { get; set; }
 
     [Column, NotNull]

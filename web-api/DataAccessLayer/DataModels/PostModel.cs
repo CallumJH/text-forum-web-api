@@ -8,9 +8,6 @@ public class PostModel : CommonPostData
     [Column, NotNull]
     public string Title { get; set; }
     
-    [Column, NotNull]
-    [Association(ThisKey = "UserId", OtherKey = "Id")]
-    public int UserId { get; set; }
 
     /// <summary>
     /// Maps the PostModel to a Post object to return to user.

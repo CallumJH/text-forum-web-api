@@ -61,7 +61,7 @@ public class PostService : IPostService
             var postModel = new PostModel(){
                 Title = post.Title,
                 Content = post.Content,
-                UserId = 1 //TODO: Pass up the user id from the token(SESSION WORK)
+                CreatedByUserID = 1 //TODO: Pass up the user id from the token(SESSION WORK)
             };
             await connection.InsertAsync(postModel);
             request.Success = true;
@@ -87,7 +87,7 @@ public class PostService : IPostService
                 request.Message = "Post not found";
                 return request;
             }
-            if(like != null || post.UserId == 1)
+            if(like != null || post.CreatedByUserID == 1)
             {
                 // The message expands on condition 1, condition 2 however is not mentioned if the user is trying to like a post that they created.
                 request.Message = "Post already liked";
@@ -124,7 +124,7 @@ public class PostService : IPostService
                 request.Message = "Post not found";
                 return request;
             }
-            if (like == null || post.UserId == 1)
+            if (like == null || post.CreatedByUserID == 1)
             {
                 // The message expands on condition 1, condition 2 however is not mentioned if the user is trying to unlike a post that they created.
                 request.Message = "Post not liked cant unlike";
