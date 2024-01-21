@@ -101,7 +101,7 @@ The database consists of 5 tables
 - Likes table (responsibile for all like information)
 - Sessions table (responsibile for all session information)
 
-View ERD bellow
+View ERD mermaid diagram bellow
 
 ```mermaid
 erDiagram
