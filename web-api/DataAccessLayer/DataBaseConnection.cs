@@ -29,4 +29,5 @@ public class DataBaseConnection : DataConnection, IDataBaseConnection
     public ITable<CommentModel> Comments => this.GetTable<CommentModel>();
     public ITable<PostModel> Posts => this.GetTable<PostModel>();
     public ITable<LikeModel> Likes => this.GetTable<LikeModel>();
+    public ITable<SessionModel> Sessions => this.GetTable<SessionModel>();
 }
