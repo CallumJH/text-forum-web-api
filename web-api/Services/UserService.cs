@@ -17,14 +17,21 @@ public class UserService : IUserService
         try
         {
             var response = new RequestWrapper();
-            var User = db.Users.FirstOrDefault(x => x.Username == user.Username && x.Password == user.Password); // TODO: Resolve Hash for this comparison
-            if (User == null)
+            var dbUser = db.Users.FirstOrDefault(x => x.Username == user.Username);
+            if (dbUser == null)
             {
                 // Keep in mind this is a backend related message don't expose it to the user
                 response.Message = "User not found";
                 return response;
             }
-            response.SetSucceeded();
+            var salt = dbUser.Salt;
+            var providedPassword = EncryptionService.EncryptPassword(user.Password, salt);
+            if(providedPassword == dbUser.Password)
+            {
+                response.SetSucceeded();
+                return response;
+            }
+            response.Message = "Wrong password";
             return response;
         }
         catch (Exception e)
@@ -40,10 +47,12 @@ public class UserService : IUserService
         try
         {
             var response = new RequestWrapper();
+            var userSalt = EncryptionService.GenerateSalt();
             var User = new UserModel()
             {
                 Username = user.Username,
-                Password = user.Password, // TODO: Hash this
+                Salt = userSalt,
+                Password = EncryptionService.EncryptPassword(user.Password, userSalt),
                 IsModerator = 0
             };
             await db.InsertAsync(User);
