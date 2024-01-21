@@ -5,9 +5,16 @@
 public class RequestWrapper {
     public bool Success { get; set; } = false;
     public string? Message { get; set; } = "Something went wrong";
-    public void SetSucceeded(string message = null) {
+    public RequestWrapper SetSucceeded(string message = "Success") {
         Success = true;
-        Message = message ?? "Success";
+        Message = message;
+        return this;
+    }
+
+    public RequestWrapper SetFailed(string message = "Something went wrong") {
+        Success = false;
+        Message = message;
+        return this;
     }
 }
 
@@ -15,8 +22,16 @@ public class RequestWrapper<T> {
     public T? Data { get; set; }
     public bool Success { get; set; } = false;
     public string? Message { get; set; } = "Something went wrong";
-    public void SetSucceeded(string message = null) {
+    public RequestWrapper<T> SetSucceeded( T? data = default, string message = "Success") {
         Success = true;
-        Message = message ?? "Success";
+        Message = message;
+        Data = data;
+        return this;
+    }
+
+    public RequestWrapper<T> SetFailed(string message = "Something went wrong") {
+        Success = false;
+        Message = message;
+        return this;
     }
 }

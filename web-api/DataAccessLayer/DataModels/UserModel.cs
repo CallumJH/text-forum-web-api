@@ -5,6 +5,18 @@ namespace DataModels;
 [Table(Name = "Users")]
 public class UserModel : BaseTableData 
 {
+    public UserModel(string username, string salt, string password)
+    {
+        Username = username;
+        Salt = salt;
+        Password = password;
+    }
+
+    public UserModel()
+    {
+        
+    }
+
     [Column, NotNull]
     public string Username { get; set; }
     [Column, NotNull]

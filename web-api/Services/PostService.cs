@@ -12,12 +12,14 @@ public class PostService : IPostService
         this.connection = connection;
     }
 
-    public async Task<RequestWrapper<List<Post>>> GetPosts()
+    private static int PageSize = 20;
+
+    public async Task<RequestWrapper<List<Post>>> GetPosts(int currentPage)
     {
         try
         {
             var request = new RequestWrapper<List<Post>>();
-            var posts = await connection.GetTable<PostModel>().ToListAsync(); //TODO: Change this to pagination
+            var posts = await connection.GetTable<PostModel>().Skip((currentPage - 1) * PageSize).Take(PageSize).ToListAsync();
             request.Data = posts.Select(x => x.MapToPost()).ToList();
             request.SetSucceeded();
             return request;
@@ -25,8 +27,7 @@ public class PostService : IPostService
         catch (Exception e)
         {
             Console.WriteLine(e);
-            var request = new RequestWrapper<List<Post>>();
-            return request;
+            return new RequestWrapper<List<Post>>();
         }
     }
 
@@ -42,56 +43,48 @@ public class PostService : IPostService
                 return request;
             }
             request.Data = post.MapToPost();
-            request.SetSucceeded();
-            return request;
+            return request.SetSucceeded();
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            var request = new RequestWrapper<Post>();
-            return request;
+            return new RequestWrapper<Post>();
         }
     }
 
-    public async Task<RequestWrapper> CreatePost(Post post)
+    public async Task<RequestWrapper> CreatePost(Post post, UserModel userModel)
     {
         try
         {
             var request = new RequestWrapper();
-            var postModel = new PostModel(){
-                Title = post.Title,
-                Content = post.Content,
-                CreatedByUserID = 1 //TODO: Pass up the user id from the token(SESSION WORK)
-            };
+            var postModel = new PostModel(post.Title, post.Content, userModel.Id);
             await connection.InsertAsync(postModel);
-            request.SetSucceeded();
-            return request;
+            return request.SetSucceeded();
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            var request = new RequestWrapper();
-            return request;
+            return new RequestWrapper();
         }
     }
 
-    public async Task<RequestWrapper> LikePost(int id)
+    public async Task<RequestWrapper> LikePost(int id, UserModel userModel)
     {
         try
         {
             var request = new RequestWrapper();
             var post = await connection.GetTable<PostModel>().FirstOrDefaultAsync(x => x.Id == id);
-            var like = await connection.GetTable<LikeModel>().FirstOrDefaultAsync(x => x.PostId == id && x.UserId == 1); //TODO: Pass up the user id from the token(SESSION WORK)
+            var like = await connection.GetTable<LikeModel>().FirstOrDefaultAsync(x => x.PostId == id && x.UserId == userModel.Id); 
+
             if (post == null)
             {
-                request.Message = "Post not found";
-                return request;
+                return request.SetFailed("Post not found");
             }
-            if(like != null || post.CreatedByUserID == 1)
+
+            if(like != null || post.CreatedByUserID == userModel.Id)
             {
                 // The message expands on condition 1, condition 2 however is not mentioned if the user is trying to like a post that they created.
-                request.Message = "Post already liked";
-                return request;
+                return request.SetFailed("Post already liked");
             }
 
             post.LikeCount++;
@@ -99,7 +92,7 @@ public class PostService : IPostService
             await connection.InsertAsync(new LikeModel()
             {
                 PostId = id,
-                UserId = 1 //TODO: Pass up the user id from the token(SESSION WORK)
+                UserId = userModel.Id,
             });
             request.SetSucceeded();
             return request;
@@ -107,24 +100,23 @@ public class PostService : IPostService
         catch (Exception e)
         {
             Console.WriteLine(e);
-            var request = new RequestWrapper();
-            return request;
+            return new RequestWrapper();
         }
     }
 
-    public async Task<RequestWrapper> UnlikePost(int id)
+    public async Task<RequestWrapper> UnlikePost(int id, UserModel userModel)
     {
         try
         {
             var request = new RequestWrapper();
             var post = await connection.GetTable<PostModel>().FirstOrDefaultAsync(x => x.Id == id);
-            var like = await connection.GetTable<LikeModel>().FirstOrDefaultAsync(x => x.PostId == id && x.UserId == 1); //TODO: Pass up the user id from the token(SESSION WORK)
+            var like = await connection.GetTable<LikeModel>().FirstOrDefaultAsync(x => x.PostId == id && x.UserId == userModel.Id); 
             if (post == null)
             {
                 request.Message = "Post not found";
                 return request;
             }
-            if (like == null || post.CreatedByUserID == 1)
+            if (like == null || post.CreatedByUserID == userModel.Id)
             {
                 // The message expands on condition 1, condition 2 however is not mentioned if the user is trying to unlike a post that they created.
                 request.Message = "Post not liked cant unlike";
@@ -140,8 +132,7 @@ public class PostService : IPostService
         catch (Exception e)
         {
             Console.WriteLine(e);
-            var request = new RequestWrapper();
-            return request;
+            return new RequestWrapper();
         }
     }
 

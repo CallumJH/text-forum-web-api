@@ -12,6 +12,12 @@ public class Comment{
     public string Content { get; set; }
 
     /// <summary>
+    /// PostId is the id of the post the comment is being created for.
+    /// </summary>
+    [Required]
+    public int PostId { get; set; }
+
+    /// <summary>
     /// DateCreated is set to the current date and time when the comment is created keeping all values to UTC.
     /// </summary>
     public DateTime DateCreated { get; set; } = DateTime.UtcNow;

@@ -2,6 +2,17 @@ using LinqToDB.Mapping;
 
 public class CommonPostData : BaseTableData
 {
+    public CommonPostData(string content, int createdByUserID)
+    {
+        Content = content;
+        CreatedByUserID = createdByUserID;
+    }
+
+    public CommonPostData()
+    {
+        
+    }
+
     [Column, NotNull]
     public string Content { get; set; }
 

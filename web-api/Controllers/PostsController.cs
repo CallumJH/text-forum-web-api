@@ -18,6 +18,7 @@ public class PostsController : Controller
     /// Get all posts.
     /// NB. THIS WILL REQUIRE PAGINATION IN THE FUTURE.
     /// </summary>
+    /// <param name="currentPage">The current page index</param>
     /// <returns>
     /// 200 OK and all posts.
     /// 400 Bad Request if there are no posts.
@@ -27,11 +28,11 @@ public class PostsController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetPosts()
+    public async Task<IActionResult> GetPosts(int currentPage)
     {
         try
         {
-            var posts = await postService.GetPosts();
+            var posts = await postService.GetPosts(currentPage);
             if(!posts.Success)
             {
                 return NotFound();
@@ -104,7 +105,7 @@ public class PostsController : Controller
         try
         {
             var user = await contextService.RetrieveUserFromHTTPContext();
-            var request = await postService.CreatePost(post);
+            var request = await postService.CreatePost(post, user);
             if(!request.Success)
             {
                 return BadRequest();
@@ -141,7 +142,8 @@ public class PostsController : Controller
     {
         try
         {
-            var request = await postService.LikePost(id);
+            var user = await contextService.RetrieveUserFromHTTPContext();
+            var request = await postService.LikePost(id, user);
             if(!request.Success)
             {
                 return BadRequest();
@@ -176,7 +178,8 @@ public class PostsController : Controller
     {
         try
         {
-            var request = await postService.UnlikePost(id);
+            var user = await contextService.RetrieveUserFromHTTPContext();
+            var request = await postService.UnlikePost(id, user);
             if(!request.Success)
             {
                 return BadRequest();

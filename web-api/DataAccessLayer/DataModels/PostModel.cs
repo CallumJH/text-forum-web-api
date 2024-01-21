@@ -5,6 +5,16 @@ namespace DataModels;
 [Table(Name = "Posts")]
 public class PostModel : CommonPostData 
 {
+    public PostModel(string title, string content, int createdByUserID) : base(content, createdByUserID)
+    {
+        Title = title;
+    }
+
+    public PostModel()
+    {
+        
+    }
+
     [Column, NotNull]
     public string Title { get; set; }
     

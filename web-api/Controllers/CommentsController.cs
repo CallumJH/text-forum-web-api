@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 public class CommentsController : Controller
 {
     ICommentService commentService;
-    public CommentsController(ICommentService commentService)
+    private readonly ContextService contextService;
+    
+    public CommentsController(ICommentService commentService, ContextService contextService)
     {
         this.commentService = commentService;
+        this.contextService = contextService;
     }
 
     /// <summary>
@@ -47,18 +50,27 @@ public class CommentsController : Controller
     /// Post object containing required comment values
     /// </param>
     /// <returns>
+    /// 200 OK if the comment was created successfully.
+    /// 400 Bad Request if the comment was not created successfully.
+    /// 401 Unauthorized if the token is invalid.
+    /// 500 Internal Server Error if there is an error.
     /// </returns>
     [HttpPost("CreateComment")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [ProducesResponseType(StatusCodes.Status511NetworkAuthenticationRequired)]
     public async Task<IActionResult> CreateComment([FromBody] Comment comment)
     {
         try
         {
-            var request = await commentService.CreateComment(comment);
+            var userModel = await contextService.RetrieveUserFromHTTPContext();
+            if (userModel == null)
+            {
+                return StatusCode(400);
+            }
+
+            var request = await commentService.CreateComment(comment, userModel);
             if (!request.Success)
             {
                 return BadRequest();
@@ -79,13 +91,27 @@ public class CommentsController : Controller
     /// The ID of the comment to like.
     /// </param>
     /// <returns>
+    /// 200 OK if the comment was liked successfully.
+    /// 400 Bad Request if the comment was not liked successfully.
+    /// 401 Unauthorized if the token is invalid.
+    /// 500 Internal Server Error if there is an error.
     /// </returns>
     [HttpPost("LikeComment/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> LikeComment(int id)
     {
         try
         {
-            var request = await commentService.LikeComment(id);
+            var userModel = await contextService.RetrieveUserFromHTTPContext();
+            if (userModel == null)
+            {
+                return StatusCode(400);
+            }
+
+            var request = await commentService.LikeComment(id, userModel);
             if (!request.Success)
             {
                 return BadRequest();
