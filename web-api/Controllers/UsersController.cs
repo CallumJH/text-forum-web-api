@@ -1,4 +1,3 @@
-using DataAccessLayer;
 using Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +20,7 @@ public class UsersController : Controller
             var request = userService.Login(user);
             if (request.Result.Success)
             {
-                return Ok();
+                return Ok(request.Result);
             }
             else
             {
