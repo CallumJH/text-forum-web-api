@@ -12,7 +12,7 @@ public class UserService : IUserService
         db = dataBaseConnection;
     }
 
-    public Task<RequestWrapper> Login(User user)
+    public async Task<RequestWrapper> Login(User user)
     {
         try
         {
@@ -22,23 +22,20 @@ public class UserService : IUserService
             {
                 // Keep in mind this is a backend related message don't expose it to the user
                 response.Message = "User not found";
-                response.Success = false;
-                return Task.FromResult(response);
+                return response;
             }
-            response.Success = true;
-            return Task.FromResult(response);
+            response.SetSucceeded();
+            return response;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             var response = new RequestWrapper();
-            response.Message = "Something went wrong";
-            response.Success = false;
-            return Task.FromResult(response);
+            return response;
         }
     }
 
-    public Task<RequestWrapper> SignUp(User user)
+    public async Task<RequestWrapper> SignUp(User user)
     {
         try
         {
@@ -49,17 +46,15 @@ public class UserService : IUserService
                 Password = user.Password, // TODO: Hash this
                 IsModerator = 0
             };
-            db.Insert(User);
-            response.Success = true;
-            return Task.FromResult(response);
+            await db.InsertAsync(User);
+            response.SetSucceeded();
+            return response;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             var response = new RequestWrapper();
-            response.Message = "Something went wrong";
-            response.Success = false;
-            return Task.FromResult(response);
+            return response;
         }
     }
 

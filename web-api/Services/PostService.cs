@@ -18,8 +18,8 @@ public class PostService : IPostService
         {
             var request = new RequestWrapper<List<Post>>();
             var posts = await connection.GetTable<PostModel>().ToListAsync(); //TODO: Change this to pagination
-            request.Success = true;
             request.Data = posts.Select(x => x.MapToPost()).ToList();
+            request.SetSucceeded();
             return request;
         }
         catch (Exception e)
@@ -41,8 +41,8 @@ public class PostService : IPostService
                 request.Message = "Post not found";
                 return request;
             }
-            request.Success = true;
             request.Data = post.MapToPost();
+            request.SetSucceeded();
             return request;
         }
         catch (Exception e)
@@ -64,7 +64,7 @@ public class PostService : IPostService
                 CreatedByUserID = 1 //TODO: Pass up the user id from the token(SESSION WORK)
             };
             await connection.InsertAsync(postModel);
-            request.Success = true;
+            request.SetSucceeded();
             return request;
         }
         catch (Exception e)
@@ -101,7 +101,7 @@ public class PostService : IPostService
                 PostId = id,
                 UserId = 1 //TODO: Pass up the user id from the token(SESSION WORK)
             });
-            request.Success = true;
+            request.SetSucceeded();
             return request;
         }
         catch (Exception e)
@@ -134,7 +134,7 @@ public class PostService : IPostService
             post.LikeCount--;
             await connection.UpdateAsync(post);
             await connection.DeleteAsync(like); //TODO: Introduce soft delete
-            request.Success = true;
+            request.SetSucceeded();
             return request;
         }
         catch (Exception e)
