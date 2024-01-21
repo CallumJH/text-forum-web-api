@@ -15,4 +15,9 @@ public class Comment{
     /// DateCreated is set to the current date and time when the comment is created keeping all values to UTC.
     /// </summary>
     public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+
+    /// <summary>
+    /// The likes count for the comment.
+    /// </summary>
+    public int Likes { get; set; }
 }

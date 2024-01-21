@@ -21,8 +21,20 @@ public class CommentsController : Controller
     [HttpGet("comments/{postId}")]
     public async Task<IActionResult> GetComments(int postId)
     {
-        //Default 200 OK
-        return Ok(new List<Comment>());
+        try
+        {
+            var comments = await commentService.GetComments(postId);
+            if (!comments.Success)
+            {
+                return NotFound();
+            }
+            return Ok(comments);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest();
+        }
     }
 
     /// <summary>
@@ -36,8 +48,20 @@ public class CommentsController : Controller
     [HttpPost("createComment")]
     public async Task<IActionResult> CreateComment([FromBody] Comment comment)
     {
-        //Default 200 OK
-        return Ok();
+        try
+        {
+            var request = await commentService.CreateComment(comment);
+            if (!request.Success)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest();
+        }
     }
 
     /// <summary>
@@ -51,7 +75,19 @@ public class CommentsController : Controller
     [HttpPost("likeComment/{id}")]
     public async Task<IActionResult> LikeComment(int id)
     {
-        //Default 200 OK
-        return Ok();
+        try
+        {
+            var request = await commentService.LikeComment(id);
+            if (!request.Success)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest();
+        }
     }
 } 
