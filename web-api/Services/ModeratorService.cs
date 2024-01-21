@@ -31,8 +31,7 @@ public class ModeratorService : IModeratorService
         catch (Exception e)
         {
             Console.WriteLine(e);
-            var response = new RequestWrapper();
-            return response;
+            return new RequestWrapper();
         }
     }
 

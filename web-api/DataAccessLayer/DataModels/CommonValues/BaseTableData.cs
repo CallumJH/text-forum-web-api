@@ -2,6 +2,11 @@ using LinqToDB.Mapping;
 
 public class BaseTableData
 {
+    public BaseTableData()
+    {
+        
+    }
+
     [Column, PrimaryKey]
     [NotNull, Identity, SkipValuesOnInsert]
     public int Id { get; set; }

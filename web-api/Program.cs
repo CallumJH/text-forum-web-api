@@ -47,6 +47,8 @@ public class Program
         );
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<ContextService>();
 
         // Adding in Swagger bearer token authentication support.
         builder.Services.AddSwaggerGen(opt => {

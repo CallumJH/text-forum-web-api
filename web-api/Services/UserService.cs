@@ -23,27 +23,23 @@ public class UserService : IUserService
             var dbUser = db.Users.FirstOrDefault(x => x.Username == user.Username);
             if (dbUser == null)
             {
-                // Keep in mind this is a backend related message don't expose it to the user
-                response.Message = "User not found";
-                return response;
+                return response.SetFailed("User not found");
             }
+
             var salt = dbUser.Salt;
             var providedPassword = EncryptionService.EncryptPassword(user.Password, salt);
+
             if(providedPassword == dbUser.Password)
             {
                 var userSessionToken = await RetrieveUserSessionToken(dbUser, dbUser.Id);
-                response.SetSucceeded();
-                response.Data = userSessionToken;
-                return response;
+                return response.SetSucceeded(userSessionToken);
             }
-            response.Message = "Wrong password";
-            return response;
+            return response.SetFailed("Wrong password");
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            var response = new RequestWrapper<string>();
-            return response;
+            return new RequestWrapper<string>();
         }
     }
 
@@ -53,22 +49,15 @@ public class UserService : IUserService
         {
             var response = new RequestWrapper();
             var userSalt = EncryptionService.GenerateSalt();
-            var User = new UserModel()
-            {
-                Username = user.Username,
-                Salt = userSalt,
-                Password = EncryptionService.EncryptPassword(user.Password, userSalt),
-                IsModerator = 0
-            };
+            var password = EncryptionService.EncryptPassword(user.Password, userSalt);
+            var User = new UserModel(user.Username, userSalt,password);
             await db.InsertAsync(User);
-            response.SetSucceeded();
-            return response;
+            return response.SetSucceeded();
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            var response = new RequestWrapper();
-            return response;
+            return new RequestWrapper();
         }
     }
 
@@ -78,27 +67,27 @@ public class UserService : IUserService
         if(session is null)
         {
             var jwtToken = identityService.GenerateToken(user);
-            var sessionModel = new SessionModel()
-            {
-                UserId = userId,
-                Token = jwtToken,
-                ExpiresAt = DateTime.Now.AddHours(1)
-            };
+            var sessionModel = new SessionModel(userId, jwtToken);
             await db.InsertAsync(sessionModel);
             return jwtToken;
         }
         if(session.ExpiresAt > DateTime.Now)
         {
             var jwtToken = identityService.GenerateToken(user);
-            var sessionModel = new SessionModel()
-            {
-                UserId = userId,
-                Token = jwtToken,
-                ExpiresAt = DateTime.Now.AddHours(1)
-            };
+            var sessionModel = new SessionModel(userId, jwtToken);
             await db.UpdateAsync(sessionModel);
         }
         return session.Token;
+    }
+
+    public async Task<UserModel> GetUserByUsername(string username)
+    {
+        var user = await db.Users.FirstOrDefaultAsync(x => x.Username == username);
+        if(user is null)
+        {
+            throw new Exception("User not found");
+        }
+        return user;
     }
 
 }

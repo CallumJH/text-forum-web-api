@@ -7,29 +7,32 @@ using Microsoft.AspNetCore.Mvc;
 public class PostsController : Controller
 {
     IPostService postService;
-    public PostsController(IPostService postService)
+    private readonly ContextService contextService;
+    public PostsController(IPostService postService, ContextService contextService)
     {
         this.postService = postService;
+        this.contextService = contextService;
     }
 
     /// <summary>
     /// Get all posts.
     /// NB. THIS WILL REQUIRE PAGINATION IN THE FUTURE.
     /// </summary>
+    /// <param name="currentPage">The current page index</param>
     /// <returns>
     /// 200 OK and all posts.
     /// 400 Bad Request if there are no posts.
     /// </returns>
     [AllowAnonymous]
-    [HttpGet("posts")]
+    [HttpGet("GetPosts")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetPosts()
+    public async Task<IActionResult> GetPosts(int currentPage)
     {
         try
         {
-            var posts = await postService.GetPosts();
+            var posts = await postService.GetPosts(currentPage);
             if(!posts.Success)
             {
                 return NotFound();
@@ -50,12 +53,14 @@ public class PostsController : Controller
     /// <returns>
     /// 200 OK and the post if the post exists.
     /// 400 Bad Request if the requested post id is invalid.
+    /// 401 Unauthorized if the token is invalid.
     /// 404 Not Found if the post does not exist.
     /// 500 Internal Server Error if there is an error.
     /// </returns>
-    [HttpGet("posts/{id}")]
+    [HttpGet("GetPost/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetPost(int id)
@@ -85,19 +90,22 @@ public class PostsController : Controller
     /// <returns>
     /// 200 OK if the post is created.
     /// 400 Bad Request if the post request is invalid.
+    /// 401 Unauthorized if the token is invalid.
     /// 500 Internal Server Error if there is an error.
     /// 511 Network Authentication Required if the user is not logged in.
     /// </returns>
-    [HttpPost("createPost")]
+    [HttpPost("CreatePost")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status511NetworkAuthenticationRequired)]
     public async Task<IActionResult> CreatePost([FromBody] Post post)
     {
         try
         {
-            var request = await postService.CreatePost(post);
+            var user = await contextService.RetrieveUserFromHTTPContext();
+            var request = await postService.CreatePost(post, user);
             if(!request.Success)
             {
                 return BadRequest();
@@ -120,19 +128,22 @@ public class PostsController : Controller
     /// <returns>
     /// 200 OK if the post is liked.
     /// 400 Bad Request if the post request is invalid.
+    /// 401 Unauthorized if the token is invalid.
     /// 500 Internal Server Error if there is an error.
     /// 511 Network Authentication Required if the user is not logged in.
     /// </returns>
-    [HttpPost("likePost/{id}")]
+    [HttpPost("LikePost/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status511NetworkAuthenticationRequired)]
     public async Task<IActionResult> LikePost(int id)
     {
         try
         {
-            var request = await postService.LikePost(id);
+            var user = await contextService.RetrieveUserFromHTTPContext();
+            var request = await postService.LikePost(id, user);
             if(!request.Success)
             {
                 return BadRequest();
@@ -167,7 +178,8 @@ public class PostsController : Controller
     {
         try
         {
-            var request = await postService.UnlikePost(id);
+            var user = await contextService.RetrieveUserFromHTTPContext();
+            var request = await postService.UnlikePost(id, user);
             if(!request.Success)
             {
                 return BadRequest();

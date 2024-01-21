@@ -5,6 +5,24 @@ namespace DataModels;
 [Table(Name = "Likes")]
 public class LikeModel : BaseTableData 
 {
+    public LikeModel(int UserId, int contentId, int LikeType)
+    {
+        this.UserId = UserId;
+        this.LikeType = LikeType;
+        if(LikeType == (int)ContentTypeEnum.Post)
+        {
+            PostId = contentId;
+        }
+        else if(LikeType == (int)ContentTypeEnum.Comment)
+        {
+            CommentId = contentId;
+        }
+    }
+    public LikeModel()
+    {
+        
+    }
+
     [Column]
     //[Association(ThisKey = "PostId", OtherKey = "Id")]
     public int PostId { get; set; }
