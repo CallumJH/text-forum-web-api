@@ -96,7 +96,7 @@ The authentication process is as follows.
 2. When logging in with the credentials used above the response will contain an auth token.
 3. In swagger you can use this token in the auth segment prepended with "Bearer {token}"
 4. If in postman change the Bearer token value in the environment collection to the new provided token.
-- Currently there is not token refresh capabilities if your token expires you will need to fire the login again.  
+<b>⚠Currently there is not token refresh capabilities if your token expires you will need to fire the login again.</b>  
 
 ## License
 ![Alt text](https://m.media-amazon.com/images/I/61GSC7FWWtL._AC_UF894,1000_QL80_.jpg "a title")
