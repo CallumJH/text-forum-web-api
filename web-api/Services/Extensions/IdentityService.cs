@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using DataModels;
 using Interfaces;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,7 +17,7 @@ public class IdentityService : IIdentityService
     /// </summary>
     /// <param name="user"></param>
     /// <returns></returns>
-    public string GenerateToken(User user)
+    public string GenerateToken(UserModel user)
     {
         try
         {
@@ -34,8 +35,14 @@ public class IdentityService : IIdentityService
                     new Claim(ClaimTypes.Role, "User")
                 }),
                 Expires = DateTime.UtcNow.Add(TokenExpiration),
+                Issuer = "http://localhost:5000",
+                Audience = "",
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
+            if(user.IsModerator == 1)
+            {
+                tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, "Moderator"));
+            }
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }

@@ -15,6 +15,9 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        var test = builder.Configuration["Jwt:Issuer"];
+        var test2 = builder.Configuration["Jwt:Key"];
+
         builder.Services.AddAuthentication(x =>
         {
             x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -27,10 +30,10 @@ public class Program
             x.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                ValidateAudience = true,
+                ValidateAudience = false,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidAudience = builder.Configuration["Jwt:Audience"],
+                //ValidAudience = builder.Configuration["Jwt:Audience"],
                 ValidIssuer = builder.Configuration["Jwt:Issuer"],
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
             };
@@ -39,6 +42,7 @@ public class Program
             options =>
             {
                 options.AddPolicy("Moderator", policy => policy.RequireClaim("IsModerator", "true"));
+                options.AddPolicy("User", policy => policy.RequireClaim("IsUser", "true"));
             }
         );
         builder.Services.AddControllers();
@@ -49,10 +53,11 @@ public class Program
             opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Text Forum API", Version = "v1" });
             opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\" remember to prepend your token with 'Bearer '",
                 Name = "Authorization",
                 In = ParameterLocation.Header,
-                Type = SecuritySchemeType.ApiKey
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer"
             });
             opt.AddSecurityRequirement(new OpenApiSecurityRequirement
             {

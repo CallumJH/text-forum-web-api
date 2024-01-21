@@ -31,7 +31,7 @@ public class UserService : IUserService
             var providedPassword = EncryptionService.EncryptPassword(user.Password, salt);
             if(providedPassword == dbUser.Password)
             {
-                var userSessionToken = await RetrieveUserSessionToken(user, dbUser.Id);
+                var userSessionToken = await RetrieveUserSessionToken(dbUser, dbUser.Id);
                 response.SetSucceeded();
                 response.Data = userSessionToken;
                 return response;
@@ -72,7 +72,7 @@ public class UserService : IUserService
         }
     }
 
-    private async Task<string> RetrieveUserSessionToken(User user, int userId)
+    private async Task<string> RetrieveUserSessionToken(UserModel user, int userId)
     {
         var session = await db.Sessions.FirstOrDefaultAsync(x => x.UserId == userId);
         if(session is null)
