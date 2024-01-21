@@ -83,10 +83,36 @@ dotnet restore
 TODO
 
 ## Usage
-TODO
+To use this API do the following.
+
+1. Set the startup project to the program.cs file
+2. Run the project 
+    - (note the GenerateDatabase.cs file under /DataAccessLayer)
+    - This will create any missing tables in the SQLite3 DB stored to the project
+    - This was to be expanded to create test user data too!
+3. Navigate to the swagger docs and fire any endpoints following the [Authentication](#authentication) guidelines
+4. Or open the postman collection and test any provided calls.
 
 ## Database
-TODO
+The database consists of 5 tables
+- Users table (responsible for all our users information)
+- Posts table (responsible for all post information)
+- Comments table (responsible for all comment information)
+- Likes table (responsibile for all like information)
+- Sessions table (responsibile for all session information)
+
+View ERD bellow
+
+```mermaid
+erDiagram
+    User ||--o{ Post : "Creates"
+    User ||--o{ Comment : "Creates"
+    User }|..|{ Like : "Creates"
+    Post ||--o{ Comment : "Has"
+    User ||--o{ Session : "Has"
+    Session }|..|{ User : "Belongs to"
+    User }|..|{ Session : "Logs in"
+```
 
 ## Authentication
 The authentication process is as follows.
