@@ -19,15 +19,13 @@ public class PostService : IPostService
             var request = new RequestWrapper<List<Post>>();
             var posts = await connection.GetTable<PostModel>().ToListAsync(); //TODO: Change this to pagination
             request.Success = true;
-            request.Data = posts.Select(x => x.MapToPost(x.LikeCount)).ToList();
+            request.Data = posts.Select(x => x.MapToPost()).ToList();
             return request;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             var request = new RequestWrapper<List<Post>>();
-            request.Message = "Something went wrong";
-            request.Success = false;
             return request;
         }
     }
@@ -37,37 +35,68 @@ public class PostService : IPostService
         try
         {
             var request = new RequestWrapper<Post>();
-            var post = await connection.GetTable<Post>().FirstOrDefaultAsync(x => x.Id == id);
+            var post = await connection.GetTable<PostModel>().FirstOrDefaultAsync(x => x.Id == id);
             if (post == null)
             {
                 request.Message = "Post not found";
-                request.Success = false;
                 return request;
             }
             request.Success = true;
-            request.Data = post;
+            request.Data = post.MapToPost();
             return request;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             var request = new RequestWrapper<Post>();
-            request.Message = "Something went wrong";
-            request.Success = false;
             return request;
         }
     }
 
     public async Task<RequestWrapper> CreatePost(Post post)
     {
-        var request = new RequestWrapper();
-        return request;
+        try
+        {
+            var request = new RequestWrapper();
+            var postModel = new PostModel(){
+                Title = post.Title,
+                Content = post.Content,
+                UserId = 1 //TODO: Pass up the user id from the token(SESSION WORK)
+            };
+            await connection.InsertAsync(postModel);
+            request.Success = true;
+            return request;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            var request = new RequestWrapper();
+            return request;
+        }
     }
 
     public async Task<RequestWrapper> LikePost(int id)
     {
-        var request = new RequestWrapper();
-        return request;
+        try
+        {
+            var request = new RequestWrapper();
+            var post = await connection.GetTable<PostModel>().FirstOrDefaultAsync(x => x.Id == id);
+            if (post == null)
+            {
+                request.Message = "Post not found";
+                return request;
+            }
+            post.LikeCount++;
+            await connection.UpdateAsync(post);
+            request.Success = true;
+            return request;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            var request = new RequestWrapper();
+            return request;
+        }
     }
 
     public async Task<RequestWrapper> UnlikePost(int id)

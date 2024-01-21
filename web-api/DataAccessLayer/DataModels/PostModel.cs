@@ -12,13 +12,19 @@ public class PostModel : CommonPostData
     [Association(ThisKey = "UserId", OtherKey = "Id")]
     public int UserId { get; set; }
 
-    public Post MapToPost(int likes)
+    /// <summary>
+    /// Maps the PostModel to a Post object to return to user.
+    /// </summary>
+    /// <returns>
+    /// Post object.
+    /// </returns>
+    public Post MapToPost()
     {
         return new Post
         {
             Title = Title,
-            Likes = likes,
-            // Comments = new List<Comment>() TODO: Connect comments to posts
+            Content = Content,
+            Likes = LikeCount
         };
     }
     
