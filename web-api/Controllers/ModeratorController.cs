@@ -1,30 +1,39 @@
 using DataAccessLayer;
+using Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = "Moderator")]
+// [Authorize(Roles = "Moderator"), Route("api/[controller]")]
+[Route("api/[controller]")]
 public class ModeratorController : Controller
 {
-
-    public ModeratorController()
+    IModeratorService moderatorService;
+    public ModeratorController(IModeratorService moderatorService)
     {
+        this.moderatorService = moderatorService;
     }
 
-    [HttpPost("togglePostMisleading/{id}")]
+    [HttpPost("toggleContentFlag")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> TogglePostMisleading(int id)
+    public async Task<IActionResult> ToggleContentFlag([FromBody]ContentToggle toggle)
     {
-        //Default 200 OK
-        return Task.FromResult<IActionResult>(Ok());
-    }
-
-    [HttpPost("togglePostFalseInformation/{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> TogglePostFalseInformation(int id)
-    {
-        //Default 200 OK
-        return Task.FromResult<IActionResult>(Ok());
+        try
+        {
+            var request = await moderatorService.ToggleContentFlag(toggle);
+            if (request.Success)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500);
+        }
     }
 }

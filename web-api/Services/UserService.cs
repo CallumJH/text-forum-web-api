@@ -12,41 +12,49 @@ public class UserService : IUserService
         db = dataBaseConnection;
     }
 
-    public Task<bool> Login(User user)
+    public async Task<RequestWrapper> Login(User user)
     {
         try
         {
+            var response = new RequestWrapper();
             var User = db.Users.FirstOrDefault(x => x.Username == user.Username && x.Password == user.Password); // TODO: Resolve Hash for this comparison
             if (User == null)
             {
-                return Task.FromResult(false);
+                // Keep in mind this is a backend related message don't expose it to the user
+                response.Message = "User not found";
+                return response;
             }
-            return Task.FromResult(true);
+            response.SetSucceeded();
+            return response;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return Task.FromResult(false);
+            var response = new RequestWrapper();
+            return response;
         }
     }
 
-    public Task<bool> SignUp(User user)
+    public async Task<RequestWrapper> SignUp(User user)
     {
         try
         {
+            var response = new RequestWrapper();
             var User = new UserModel()
             {
                 Username = user.Username,
                 Password = user.Password, // TODO: Hash this
                 IsModerator = 0
             };
-            db.Insert(User);
-            return Task.FromResult(true);
+            await db.InsertAsync(User);
+            response.SetSucceeded();
+            return response;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return Task.FromResult(false);
+            var response = new RequestWrapper();
+            return response;
         }
     }
 

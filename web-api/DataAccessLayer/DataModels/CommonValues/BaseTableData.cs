@@ -2,12 +2,13 @@ using LinqToDB.Mapping;
 
 public class BaseTableData
 {
-    [Column, PrimaryKey, NotNull]
+    [Column, PrimaryKey]
+    [NotNull, Identity, SkipValuesOnInsert]
     public int Id { get; set; }
 
     [Column, NotNull]
-    public DateTime DateCreated { get; set; }
+    public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
     [Column, NotNull]
-    public DateTime LastUpdated { get; set; }
+    public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
 }

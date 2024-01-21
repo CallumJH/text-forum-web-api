@@ -1,12 +1,16 @@
 using DataAccessLayer;
+using Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = "User")]
+//[Authorize(Roles = "User"), Route("api/[controller]")]
+[Route("api/[controller]")]
 public class PostsController : Controller
 {
-    public PostsController()
+    IPostService postService;
+    public PostsController(IPostService postService)
     {
+        this.postService = postService;
     }
 
     /// <summary>
@@ -21,10 +25,23 @@ public class PostsController : Controller
     [HttpGet("posts")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> GetPosts()
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetPosts()
     {
-        //Default 200 OK
-        return Task.FromResult<IActionResult>(Ok(new List<Post>()));
+        try
+        {
+            var posts = await postService.GetPosts();
+            if(!posts.Success)
+            {
+                return NotFound();
+            }
+            return Ok(posts);
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest();
+        }
     }
 
     /// <summary>
@@ -42,10 +59,22 @@ public class PostsController : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public Task<IActionResult> GetPost(int id)
+    public async Task<IActionResult> GetPost(int id)
     {
-        //Default 200 OK
-        return Task.FromResult<IActionResult>(Ok(new Post()));
+        try
+        {
+            var post = await postService.GetPost(id);
+            if(!post.Success)
+            {
+                return NotFound();
+            }
+            return Ok(post);
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e);
+            return NotFound();
+        }
     }
 
     /// <summary>
@@ -65,10 +94,22 @@ public class PostsController : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status511NetworkAuthenticationRequired)]
-    public Task<IActionResult> CreatePost([FromBody] Post post)
+    public async Task<IActionResult> CreatePost([FromBody] Post post)
     {
-        //Default 200 OK
-        return Task.FromResult<IActionResult>(Ok());
+        try
+        {
+            var request = await postService.CreatePost(post);
+            if(!request.Success)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest();
+        }
     }
 
     /// <summary>
@@ -88,10 +129,22 @@ public class PostsController : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status511NetworkAuthenticationRequired)]
-    public Task<IActionResult> LikePost(int id)
+    public async Task<IActionResult> LikePost(int id)
     {
-        //Default 200 OK
-        return Task.FromResult<IActionResult>(Ok());
+        try
+        {
+            var request = await postService.LikePost(id);
+            if(!request.Success)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest();
+        }
     }
 
     /// <summary>
@@ -111,9 +164,21 @@ public class PostsController : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status511NetworkAuthenticationRequired)]
-    public Task<IActionResult> UnlikePost(int id)
+    public async Task<IActionResult> UnlikePost(int id)
     {
-        //Default 200 OK
-        return Task.FromResult<IActionResult>(Ok());
+        try
+        {
+            var request = await postService.UnlikePost(id);
+            if(!request.Success)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest();
+        }
     }
 } 

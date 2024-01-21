@@ -1,13 +1,15 @@
 using DataAccessLayer;
+using Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = "User")]
+[Authorize(Roles = "User"), Route("api/[controller]")]
 public class CommentsController : Controller
 {
-
-    public CommentsController()
+    ICommentService commentService;
+    public CommentsController(ICommentService commentService)
     {
+        this.commentService = commentService;
     }
 
     /// <summary>
@@ -17,10 +19,22 @@ public class CommentsController : Controller
     /// <returns>
     /// </returns>
     [HttpGet("comments/{postId}")]
-    public Task<IActionResult> GetComments(int postId)
+    public async Task<IActionResult> GetComments(int postId)
     {
-        //Default 200 OK
-        return Task.FromResult<IActionResult>(Ok(new List<Comment>()));
+        try
+        {
+            var comments = await commentService.GetComments(postId);
+            if (!comments.Success)
+            {
+                return NotFound();
+            }
+            return Ok(comments);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest();
+        }
     }
 
     /// <summary>
@@ -32,10 +46,22 @@ public class CommentsController : Controller
     /// <returns>
     /// </returns>
     [HttpPost("createComment")]
-    public Task<IActionResult> CreateComment([FromBody] Comment comment)
+    public async Task<IActionResult> CreateComment([FromBody] Comment comment)
     {
-        //Default 200 OK
-        return Task.FromResult<IActionResult>(Ok());
+        try
+        {
+            var request = await commentService.CreateComment(comment);
+            if (!request.Success)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest();
+        }
     }
 
     /// <summary>
@@ -47,9 +73,21 @@ public class CommentsController : Controller
     /// <returns>
     /// </returns>
     [HttpPost("likeComment/{id}")]
-    public Task<IActionResult> LikeComment(int id)
+    public async Task<IActionResult> LikeComment(int id)
     {
-        //Default 200 OK
-        return Task.FromResult<IActionResult>(Ok());
+        try
+        {
+            var request = await commentService.LikeComment(id);
+            if (!request.Success)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest();
+        }
     }
 } 

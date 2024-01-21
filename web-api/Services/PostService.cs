@@ -1,30 +1,148 @@
 using DataAccessLayer;
+using DataModels;
 using Interfaces;
+using LinqToDB;
 
 public class PostService : IPostService
 {
-    private readonly DataBaseConnection _connection;
+    private readonly DataBaseConnection connection;
 
     public PostService(DataBaseConnection connection)
     {
-        _connection = connection;
+        this.connection = connection;
     }
 
-    public async Task<List<Post>> GetPosts()
+    public async Task<RequestWrapper<List<Post>>> GetPosts()
     {
-        return new List<Post>();
+        try
+        {
+            var request = new RequestWrapper<List<Post>>();
+            var posts = await connection.GetTable<PostModel>().ToListAsync(); //TODO: Change this to pagination
+            request.Data = posts.Select(x => x.MapToPost()).ToList();
+            request.SetSucceeded();
+            return request;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            var request = new RequestWrapper<List<Post>>();
+            return request;
+        }
     }
 
-    public async Task CreatePost(Post post)
+    public async Task<RequestWrapper<Post>> GetPost(int id)
     {
+        try
+        {
+            var request = new RequestWrapper<Post>();
+            var post = await connection.GetTable<PostModel>().FirstOrDefaultAsync(x => x.Id == id);
+            if (post == null)
+            {
+                request.Message = "Post not found";
+                return request;
+            }
+            request.Data = post.MapToPost();
+            request.SetSucceeded();
+            return request;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            var request = new RequestWrapper<Post>();
+            return request;
+        }
     }
 
-    public async Task LikePost(int id)
+    public async Task<RequestWrapper> CreatePost(Post post)
     {
+        try
+        {
+            var request = new RequestWrapper();
+            var postModel = new PostModel(){
+                Title = post.Title,
+                Content = post.Content,
+                CreatedByUserID = 1 //TODO: Pass up the user id from the token(SESSION WORK)
+            };
+            await connection.InsertAsync(postModel);
+            request.SetSucceeded();
+            return request;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            var request = new RequestWrapper();
+            return request;
+        }
     }
 
-    public async Task UnlikePost(int id)
+    public async Task<RequestWrapper> LikePost(int id)
     {
+        try
+        {
+            var request = new RequestWrapper();
+            var post = await connection.GetTable<PostModel>().FirstOrDefaultAsync(x => x.Id == id);
+            var like = await connection.GetTable<LikeModel>().FirstOrDefaultAsync(x => x.PostId == id && x.UserId == 1); //TODO: Pass up the user id from the token(SESSION WORK)
+            if (post == null)
+            {
+                request.Message = "Post not found";
+                return request;
+            }
+            if(like != null || post.CreatedByUserID == 1)
+            {
+                // The message expands on condition 1, condition 2 however is not mentioned if the user is trying to like a post that they created.
+                request.Message = "Post already liked";
+                return request;
+            }
+
+            post.LikeCount++;
+            await connection.UpdateAsync(post);
+            await connection.InsertAsync(new LikeModel()
+            {
+                PostId = id,
+                UserId = 1 //TODO: Pass up the user id from the token(SESSION WORK)
+            });
+            request.SetSucceeded();
+            return request;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            var request = new RequestWrapper();
+            return request;
+        }
+    }
+
+    public async Task<RequestWrapper> UnlikePost(int id)
+    {
+        try
+        {
+            var request = new RequestWrapper();
+            var post = await connection.GetTable<PostModel>().FirstOrDefaultAsync(x => x.Id == id);
+            var like = await connection.GetTable<LikeModel>().FirstOrDefaultAsync(x => x.PostId == id && x.UserId == 1); //TODO: Pass up the user id from the token(SESSION WORK)
+            if (post == null)
+            {
+                request.Message = "Post not found";
+                return request;
+            }
+            if (like == null || post.CreatedByUserID == 1)
+            {
+                // The message expands on condition 1, condition 2 however is not mentioned if the user is trying to unlike a post that they created.
+                request.Message = "Post not liked cant unlike";
+                return request;
+            }
+
+            post.LikeCount--;
+            await connection.UpdateAsync(post);
+            await connection.DeleteAsync(like); //TODO: Introduce soft delete
+            request.SetSucceeded();
+            return request;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            var request = new RequestWrapper();
+            return request;
+        }
     }
 
 }

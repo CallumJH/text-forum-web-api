@@ -2,7 +2,7 @@
 
 public interface IUserService
 {
-    Task<bool> Login(User user);
-    Task<bool> SignUp(User user);
+    Task<RequestWrapper> Login(User user);
+    Task<RequestWrapper> SignUp(User user);
 }
 

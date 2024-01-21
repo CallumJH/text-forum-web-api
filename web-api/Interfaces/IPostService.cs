@@ -3,8 +3,9 @@
 public interface IPostService
 {
 
-    Task CreatePost(Post post);
-    Task<List<Post>> GetPosts();
-    Task LikePost(int id);
-    Task UnlikePost(int id);
+    Task<RequestWrapper> CreatePost(Post post);
+    Task<RequestWrapper<List<Post>>> GetPosts();
+    Task<RequestWrapper<Post>> GetPost(int id);
+    Task<RequestWrapper> LikePost(int id);
+    Task<RequestWrapper> UnlikePost(int id);
 }

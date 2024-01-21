@@ -2,8 +2,8 @@
 
 public interface ICommentService
 {
-    Task CreateComment(Comment comment);
-    Task<List<Comment>> GetComments(int postId);
-    Task LikeComment(int id);
+    Task<RequestWrapper> CreateComment(Comment comment);
+    Task<RequestWrapper<List<Comment>>> GetComments(int postId);
+    Task<RequestWrapper> LikeComment(int id);
 }
 

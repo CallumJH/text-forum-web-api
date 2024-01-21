@@ -2,6 +2,7 @@ using DataAccessLayer;
 using Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
+[Route("api/[controller]")]
 public class UsersController : Controller
 {
     IUserService userService;
@@ -13,48 +14,49 @@ public class UsersController : Controller
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> LoginUser([FromBody] User user)
+    public async Task<IActionResult> LoginUser([FromBody] User user)
     {
         try
         {
             var request = userService.Login(user);
-            if (request.Result)
+            if (request.Result.Success)
             {
-                return Task.FromResult<IActionResult>(Ok());
+                return Ok();
             }
             else
             {
-                return Task.FromResult<IActionResult>(BadRequest());
+                return BadRequest();
             }
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return Task.FromResult<IActionResult>(StatusCode(500));
+            return StatusCode(500);
         }
     }
 
     [HttpPost("signup")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> SignUpUser([FromBody] User user)
+    public async Task<IActionResult> SignUpUser([FromBody] User user)
     {
+        //TODO: Include specific error messages when per se username already exists
         try
         {
             var request = userService.SignUp(user);
-            if (request.Result)
+            if (request.Result.Success)
             {
-                return Task.FromResult<IActionResult>(Ok());
+                return Ok();
             }
             else
             {
-                return Task.FromResult<IActionResult>(BadRequest());
+                return BadRequest();
             }
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return Task.FromResult<IActionResult>(StatusCode(500));
+            return StatusCode(500);
         }
     }
 }
