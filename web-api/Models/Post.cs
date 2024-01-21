@@ -22,4 +22,8 @@ public class Post
     /// DateCreated is set to the current date and time when the post is created keeping all values to UTC.
     /// </summary>
     public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+    /// <summary>
+    /// Likes count for the post.
+    /// </summary>
+    public int Likes { get; set; }
 }

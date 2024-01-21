@@ -11,5 +11,15 @@ public class PostModel : CommonPostData
     [Column, NotNull]
     [Association(ThisKey = "UserId", OtherKey = "Id")]
     public int UserId { get; set; }
+
+    public Post MapToPost(int likes)
+    {
+        return new Post
+        {
+            Title = Title,
+            Likes = likes,
+            // Comments = new List<Comment>() TODO: Connect comments to posts
+        };
+    }
     
 }
