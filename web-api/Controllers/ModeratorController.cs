@@ -1,10 +1,8 @@
-using DataAccessLayer;
 using Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-// [Authorize(Roles = "Moderator"), Route("api/[controller]")]
-[Route("api/[controller]")]
+[Authorize(Roles = "Moderator"), Route("api/[controller]")]
 public class ModeratorController : Controller
 {
     IModeratorService moderatorService;

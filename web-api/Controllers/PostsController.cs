@@ -3,8 +3,7 @@ using Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-//[Authorize(Roles = "User"), Route("api/[controller]")]
-[Route("api/[controller]")]
+[Authorize(Roles = "User"), Route("api/[controller]")]
 public class PostsController : Controller
 {
     IPostService postService;

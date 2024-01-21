@@ -31,6 +31,10 @@ public class GenerateDatabase
             {
                 db.CreateTable<LikeModel>();
             }
+            if(!tables.Any(x => x.TableName == "Sessions"))
+            {
+                db.CreateTable<SessionModel>();
+            }
 
         }
         catch(Exception e)

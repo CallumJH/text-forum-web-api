@@ -7,6 +7,8 @@ public class UserModel : BaseTableData
 {
     [Column, NotNull]
     public string Username { get; set; }
+    [Column, NotNull]
+    public string Salt { get; set; }
 
     [Column, NotNull]
     public string Password { get; set; }
