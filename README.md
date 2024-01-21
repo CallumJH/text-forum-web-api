@@ -12,7 +12,6 @@ Developed and designed by myself - Callum Harris
 - [Usage](#usage)
 - [Database](#database)
 - [Authentication](#authentication)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Overview
