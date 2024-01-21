@@ -85,21 +85,21 @@ public class PostsController : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status511NetworkAuthenticationRequired)]
-    public Task<IActionResult> CreatePost([FromBody] Post post)
+    public async Task<IActionResult> CreatePost([FromBody] Post post)
     {
         try
         {
-            var result = postService.CreatePost(post);
+            var result = await postService.CreatePost(post);
             if(result == null)
             {
-                return Task.FromResult<IActionResult>(BadRequest());
+                return BadRequest();
             }
-            return Task.FromResult<IActionResult>(Ok());
+            return Ok();
         }
         catch(Exception e)
         {
             Console.WriteLine(e);
-            return Task.FromResult<IActionResult>(BadRequest());
+            return BadRequest();
         }
     }
 
@@ -120,10 +120,10 @@ public class PostsController : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status511NetworkAuthenticationRequired)]
-    public Task<IActionResult> LikePost(int id)
+    public async Task<IActionResult> LikePost(int id)
     {
         //Default 200 OK
-        return Task.FromResult<IActionResult>(Ok());
+        return Ok();
     }
 
     /// <summary>
@@ -143,9 +143,9 @@ public class PostsController : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status511NetworkAuthenticationRequired)]
-    public Task<IActionResult> UnlikePost(int id)
+    public async Task<IActionResult> UnlikePost(int id)
     {
         //Default 200 OK
-        return Task.FromResult<IActionResult>(Ok());
+        return Ok();
     }
 } 

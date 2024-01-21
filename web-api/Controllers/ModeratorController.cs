@@ -13,18 +13,18 @@ public class ModeratorController : Controller
     [HttpPost("togglePostMisleading/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> TogglePostMisleading(int id)
+    public async Task<IActionResult> TogglePostMisleading(int id)
     {
         //Default 200 OK
-        return Task.FromResult<IActionResult>(Ok());
+        return Ok();
     }
 
     [HttpPost("togglePostFalseInformation/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> TogglePostFalseInformation(int id)
+    public async Task<IActionResult> TogglePostFalseInformation(int id)
     {
         //Default 200 OK
-        return Task.FromResult<IActionResult>(Ok());
+        return Ok();
     }
 }
